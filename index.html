@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff" id="themeColorMeta">
+    <title>Clipt</title>
+    
+    <!-- Favicon from jsDelivr + GitHub -->
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/andreadevita99/Clipt@main/android-chrome-512x512.png">
+    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/andreadevita99/Clipt@main/android-chrome-512x512.png">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global transitions for smooth theme switching */
+        body, .apple-card, .link-item, .social-icon, .avatar, .profile-name, .profile-bio, .link-icon, .link-text, .link-chevron {
+            transition: background-color 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        body {
+            background: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.4;
+            color: #1c1c1e;
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: #000000;
+            color: #ececec;
+        }
+
+        body.dark-mode .apple-card {
+            background: rgba(28, 28, 30, 0.96);
+            border-color: rgba(80, 80, 85, 0.5);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark-mode .profile-name {
+            background: linear-gradient(135deg, #f5f5f7 0%, #e5e5ea 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        body.dark-mode .profile-bio {
+            color: #aaaab3;
+        }
+
+        /* Borders for links and social icons: both light and dark */
+        .social-icon {
+            background: #f2f2f5;
+            color: #1c1c1e;
+            border: 1px solid rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+        .social-icon:hover {
+            background: #e5e5ea;
+            border-color: rgba(0, 0, 0, 0.2) !important;
+        }
+        body.dark-mode .social-icon {
+            background: #2c2c2e;
+            color: #e5e5ea;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        body.dark-mode .social-icon:hover {
+            background: #3a3a3c;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .link-item {
+            background: #f9f9fb;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            color: #1c1c1e;
+        }
+        .link-item:hover {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.18) !important;
+            transform: scale(1.01) translateY(-2px);
+        }
+        /* Dark mode: white text and high contrast */
+        body.dark-mode .link-item {
+            background: #2c2c2e;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .link-item:hover {
+            background: #3a3a3c;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            transform: scale(1.01) translateY(-2px);
+        }
+        /* Ensures link text is white in dark mode */
+        body.dark-mode .link-text {
+            color: #ffffff !important;
+        }
+        body.dark-mode .link-chevron {
+            color: #8e8e93;
+        }
+        body.dark-mode .link-icon {
+            color: #0a84ff;
+        }
+
+        /* Main card */
+        .apple-card {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 44px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.02);
+            padding: 2rem 1.8rem;
+            border: 0.5px solid rgba(224, 224, 230, 0.6);
+            position: relative;
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 1rem;
+            }
+            .apple-card {
+                padding: 1.8rem 1.2rem;
+                border-radius: 32px;
+            }
+        }
+
+        /* Header with smooth iOS toggle */
+        .card-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        /* iOS Style Switch */
+        .theme-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: #e5e5ea;
+            border-radius: 40px;
+            padding: 4px;
+            cursor: pointer;
+            user-select: none;
+            border: 0.5px solid rgba(0, 0, 0, 0.04);
+            transition: background 0.2s ease;
+            width: 88px;
+            height: 44px;
+        }
+
+        body.dark-mode .theme-switch {
+            background: #3a3a3c;
+        }
+
+        .switch-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Icons always colored */
+        .switch-icons i.fa-sun {
+            color: #FF9F0A !important;
+            text-shadow: 0 0 2px rgba(255, 159, 10, 0.4);
+        }
+        .switch-icons i.fa-moon {
+            color: #0A84FF !important;
+            text-shadow: 0 0 2px rgba(10, 132, 255, 0.3);
+        }
+
+        .switch-thumb {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 36px;
+            height: 36px;
+            background-color: #ffffff;
+            border-radius: 36px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 2;
+        }
+
+        body.dark-mode .switch-thumb {
+            transform: translateX(44px);
+        }
+
+        .theme-switch:hover .switch-thumb {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-switch:focus-visible {
+            outline: 2px solid #007aff;
+            outline-offset: 2px;
+            border-radius: 40px;
+        }
+
+        /* Profile section */
+        .profile {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        /* Photo frame */
+        .avatar {
+            width: 108px;
+            height: 108px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #e9e9ef;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+        body.dark-mode .avatar {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .avatar:hover {
+            transform: scale(1.02);
+        }
+
+        /* Textual placeholder for the photo */
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d9d9e3;
+            color: #3a3a3e;
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 400;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 0 0.5rem;
+            word-break: break-word;
+        }
+        body.dark-mode .avatar-placeholder {
+            background: #2c2c2e;
+            color: #e5e5ea;
+        }
+
+        /* Italic name with quotes */
+        .profile-name {
+            font-size: 1.85rem;
+            font-weight: 620;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.3rem;
+            font-style: italic;
+        }
+
+        .profile-bio {
+            font-size: 1rem;
+            color: #6c6c70;
+            max-width: 280px;
+            margin: 0 auto;
+            line-height: 1.4;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        /* Social row */
+        .social-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.6rem 0 1.8rem 0;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 30px;
+            font-size: 1.6rem;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+        }
+        .social-icon:active {
+            transform: translateY(1px);
+        }
+
+        /* Main links list */
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin: 1.2rem 0 0rem;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.4rem;
+            border-radius: 18px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .link-item:hover {
+            transform: scale(1.01) translateY(-2px);
+            box-shadow: 0 12px 22px -12px rgba(0, 0, 0, 0.12);
+        }
+        .link-item:active {
+            transform: scale(0.99);
+        }
+
+        .link-icon {
+            width: 32px;
+            text-align: center;
+            font-size: 1.35rem;
+            color: #007aff;
+        }
+
+        .link-text {
+            flex: 1;
+            font-size: 1rem;
+            letter-spacing: -0.2px;
+            font-style: italic;
+        }
+
+        .link-chevron {
+            font-size: 0.85rem;
+            transition: transform 0.1s ease;
+        }
+
+        .link-item:hover .link-chevron {
+            transform: translateX(4px);
+            color: #007aff;
+        }
+
+        @media (max-width: 480px) {
+            .link-item {
+                padding: 0.85rem 1.2rem;
+            }
+            .social-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+            .profile-name {
+                font-size: 1.65rem;
+            }
+            .theme-switch {
+                width: 78px;
+                height: 38px;
+            }
+            .switch-thumb {
+                width: 30px;
+                height: 30px;
+                top: 4px;
+                left: 4px;
+            }
+            body.dark-mode .switch-thumb {
+                transform: translateX(40px);
+            }
+            .switch-icons i {
+                font-size: 1rem;
+            }
+            .switch-icons {
+                padding: 0 8px;
+            }
+            .avatar {
+                width: 90px;
+                height: 90px;
+            }
+            .avatar-placeholder {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="apple-card">
+    <!-- Header with iOS toggle -->
+    <div class="card-header">
+        <div class="theme-switch" id="themeToggle" role="switch" aria-label="Light/Dark mode" tabindex="0">
+            <div class="switch-thumb"></div>
+            <div class="switch-icons">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile section -->
+    <div class="profile">
+        <div class="avatar" id="profileAvatar">
+            <div class="avatar-placeholder">your photo here</div>
+        </div>
+        <h1 class="profile-name" id="profileName">“Your name surname here”</h1>
+        <div class="profile-bio" id="profileBio">“your bio here”</div>
+    </div>
+
+    <!-- Social links container -->
+    <div id="socialLinksContainer" class="social-row"></div>
+
+    <!-- Main links container -->
+    <div id="mainLinksContainer" class="links-list"></div>
+
+</div>
+
+<script>
+    // ----------------------------------------------
+    // DATA CONFIGURATION (with quotes and correct name)
+    // ----------------------------------------------
+    const userConfig = {
+        name: "“your Name and Surname here”",
+        bio: "“your bio here”",
+        
+        // Example socials
+        socials: [
+            { name: "Instagram", url: "https://instagram.com/", icon: "fab fa-instagram" },
+            { name: "X / Twitter", url: "https://twitter.com/", icon: "fab fa-twitter" },
+            { name: "GitHub", url: "https://github.com/", icon: "fab fa-github" },
+            { name: "LinkedIn", url: "https://linkedin.com/", icon: "fab fa-linkedin-in" },
+            { name: "TikTok", url: "https://tiktok.com/", icon: "fab fa-tiktok" }
+        ],
+        
+        // 5 placeholder links with quotes
+        mainLinks: [
+            { title: "“your link 1 here”", url: "#", icon: "fas fa-link" },
+            { title: "“your link 2 here”", url: "#", icon: "fas fa-link" },
+            { title: "“your link 3 here”", url: "#", icon: "fas fa-link" },
+            { title: "“your link 4 here”", url: "#", icon: "fas fa-link" },
+            { title: "“your link 5 here”", url: "#", icon: "fas fa-link" }
+        ]
+    };
+
+    // --- DARK MODULE TOGGLE (iOS Slider with localStorage) ---
+    const THEME_KEY = 'appleLinktreeTheme';
+    const themeSwitch = document.getElementById('themeToggle');
+    
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000000');
+        } else {
+            document.body.classList.remove('dark-mode');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
+        }
+        localStorage.setItem(THEME_KEY, theme);
+    }
+    
+    function getSystemTheme() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    
+    function initTheme() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        let activeTheme = 'light';
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+            activeTheme = savedTheme;
+        } else {
+            activeTheme = getSystemTheme();
+        }
+        setTheme(activeTheme);
+    }
+    
+    if (themeSwitch) {
+        themeSwitch.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isDark = document.body.classList.contains('dark-mode');
+            setTheme(isDark ? 'light' : 'dark');
+        });
+        themeSwitch.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const isDark = document.body.classList.contains('dark-mode');
+                setTheme(isDark ? 'light' : 'dark');
+            }
+        });
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem(THEME_KEY)) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+    });
+    
+    // --- DYNAMIC RENDER ---
+    function renderAppleLinktree() {
+        // Name and bio
+        const nameEl = document.getElementById("profileName");
+        const bioEl = document.getElementById("profileBio");
+        if (nameEl) nameEl.innerText = userConfig.name;
+        if (bioEl) bioEl.innerText = userConfig.bio;
+        
+        // Social links
+        const socialContainer = document.getElementById("socialLinksContainer");
+        if (socialContainer) {
+            socialContainer.innerHTML = "";
+            if (userConfig.socials && userConfig.socials.length) {
+                userConfig.socials.forEach(social => {
+                    const socialLink = document.createElement("a");
+                    socialLink.href = social.url;
+                    socialLink.target = "_blank";
+                    socialLink.rel = "noopener noreferrer";
+                    socialLink.className = "social-icon";
+                    socialLink.setAttribute("aria-label", social.name);
+                    const iconElem = document.createElement("i");
+                    iconElem.className = social.icon;
+                    socialLink.appendChild(iconElem);
+                    socialContainer.appendChild(socialLink);
+                });
+            } else {
+                socialContainer.style.display = "none";
+            }
+        }
+        
+        // Main links
+        const linksContainer = document.getElementById("mainLinksContainer");
+        if (linksContainer) {
+            linksContainer.innerHTML = "";
+            if (userConfig.mainLinks && userConfig.mainLinks.length) {
+                userConfig.mainLinks.forEach(link => {
+                    const linkAnchor = document.createElement("a");
+                    linkAnchor.href = link.url;
+                    if (link.url === "#") {
+                        linkAnchor.addEventListener('click', (e) => e.preventDefault());
+                    } else {
+                        linkAnchor.target = "_blank";
+                        linkAnchor.rel = "noopener noreferrer";
+                    }
+                    linkAnchor.className = "link-item";
+                    
+                    const leftIcon = document.createElement("div");
+                    leftIcon.className = "link-icon";
+                    const iconTag = document.createElement("i");
+                    iconTag.className = link.icon;
+                    leftIcon.appendChild(iconTag);
+                    
+                    const textSpan = document.createElement("span");
+                    textSpan.className = "link-text";
+                    textSpan.innerText = link.title;
+                    
+                    const chevronSpan = document.createElement("div");
+                    chevronSpan.className = "link-chevron";
+                    const chevronIcon = document.createElement("i");
+                    chevronIcon.className = "fas fa-chevron-right";
+                    chevronSpan.appendChild(chevronIcon);
+                    
+                    linkAnchor.appendChild(leftIcon);
+                    linkAnchor.appendChild(textSpan);
+                    linkAnchor.appendChild(chevronSpan);
+                    linksContainer.appendChild(linkAnchor);
+                });
+            } else {
+                const emptyMsg = document.createElement("div");
+                emptyMsg.className = "link-item";
+                emptyMsg.style.justifyContent = "center";
+                emptyMsg.style.cursor = "default";
+                emptyMsg.style.opacity = "0.7";
+                emptyMsg.innerHTML = `<span><i class="fas fa-link"></i> No links configured</span>`;
+                linksContainer.appendChild(emptyMsg);
+            }
+        }
+    }
+    
+    // Haptic touch feedback effect
+    const addTapFeedback = () => {
+        const allLinks = document.querySelectorAll('.link-item, .social-icon');
+        allLinks.forEach(link => {
+            const cleanUp = (el) => {
+                const oldTouchStart = el._touchStart;
+                const oldTouchEnd = el._touchEnd;
+                const oldTouchCancel = el._touchCancel;
+                const oldMouseDown = el._mouseDown;
+                const oldMouseUp = el._mouseUp;
+                const oldMouseLeave = el._mouseLeave;
+                if (oldTouchStart) el.removeEventListener('touchstart', oldTouchStart);
+                if (oldTouchEnd) el.removeEventListener('touchend', oldTouchEnd);
+                if (oldTouchCancel) el.removeEventListener('touchcancel', oldTouchCancel);
+                if (oldMouseDown) el.removeEventListener('mousedown', oldMouseDown);
+                if (oldMouseUp) el.removeEventListener('mouseup', oldMouseUp);
+                if (oldMouseLeave) el.removeEventListener('mouseleave', oldMouseLeave);
+            };
+            cleanUp(link);
+            
+            const touchStartHandler = (e) => {
+                link.style.transition = 'transform 0.05s ease';
+                link.style.transform = 'scale(0.97)';
+            };
+            const touchEndHandler = () => { link.style.transform = ''; };
+            const touchCancelHandler = () => { link.style.transform = ''; };
+            const mouseDownHandler = () => { link.style.transform = 'scale(0.98)'; };
+            const mouseUpHandler = () => { link.style.transform = ''; };
+            const mouseLeaveHandler = () => { link.style.transform = ''; };
+            
+            link.addEventListener('touchstart', touchStartHandler, { passive: true });
+            link.addEventListener('touchend', touchEndHandler);
+            link.addEventListener('touchcancel', touchCancelHandler);
+            link.addEventListener('mousedown', mouseDownHandler);
+            link.addEventListener('mouseup', mouseUpHandler);
+            link.addEventListener('mouseleave', mouseLeaveHandler);
+            
+            link._touchStart = touchStartHandler;
+            link._touchEnd = touchEndHandler;
+            link._touchCancel = touchCancelHandler;
+            link._mouseDown = mouseDownHandler;
+            link._mouseUp = mouseUpHandler;
+            link._mouseLeave = mouseLeaveHandler;
+        });
+    };
+    
+    const observeDynamicFeedback = () => {
+        const targetNodes = [document.getElementById('mainLinksContainer'), document.getElementById('socialLinksContainer')];
+        const observerCallback = () => addTapFeedback();
+        targetNodes.forEach(node => {
+            if (node) {
+                const observer = new MutationObserver(observerCallback);
+                observer.observe(node, { childList: true, subtree: true });
+            }
+        });
+        addTapFeedback();
+    };
+    
+    // Initialization
+    document.addEventListener("DOMContentLoaded", () => {
+        renderAppleLinktree();
+        initTheme();
+        observeDynamicFeedback();
+    });
+</script>
+
+</body>
+</html>
