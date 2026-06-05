@@ -14,7 +14,7 @@ It's fully customisable:
  - the user's Name and Surname;
  - the user's bio;
  - the user's social links;
- - ths user's other links, such as the number of the links.
+ - the user's other links, such as the number of the links.
 
 ## Author
 
