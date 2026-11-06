@@ -1,20 +1,6 @@
 # Clipt
 
-This is a simple responsive Linktree-style/Link-in-bio-style landing page, inspired by the Apple design, made with:
- - **HTML**
- - **CSS**
- - **JavaScript**
-
-It also has an iOS inspired toggle made for switching from dark mode to light mode and vice-versa.
-
-## Customisation
-
-It's fully customisable:
- - the profile picture;
- - the user's Name and Surname;
- - the user's bio;
- - the user's social links;
- - the user's other links, such as the number of the links.
+This is a simple responsive Linktree-style/Link-in-bio-style landing page.
 
 ## Author
 
