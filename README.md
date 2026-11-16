@@ -2,6 +2,8 @@
 
 This is a simple responsive Linktree-style/Link-in-bio-style landing page.
 
+![enter image description here](https://github.com/andreadevita99/Clipt/blob/main/mockup.png)
+
 ## Author
 
 [Andrea De Vita](https://github.com/andreadevita99)
